@@ -1,0 +1,73 @@
+---
+name: Bug Report
+description: "Report a bug or issue with the mod"
+title: "[BUG] "
+labels: bug
+body:
+  - type: input
+    id: mod_version
+    attributes:
+      label: "Mod Version"
+      description: "Provide the version of the mod you are using (e.g., 1.2.3)."
+    validations:
+      required: true
+
+  - type: input
+    id: minecraft_version
+    attributes:
+      label: "Minecraft Version"
+      description: "Specify the Minecraft version (e.g., 1.20.1)."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mod_loader
+    attributes:
+      label: "Mod Loader"
+      description: "Indicate the mod loader you are using."
+      options:
+        - "Forge"
+        - "Fabric"
+        - "Quilt"
+        - "Other (specify in Additional Context)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: "Describe the Bug"
+      description: "A clear and concise description of the bug or issue."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Provide steps to reproduce the behavior."
+      placeholder: |
+        1. Open the game.
+        2. Perform '...'
+        3. See error.
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "What did you expect to happen instead?"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Game Logs"
+      description: "Include relevant logs."
+      placeholder: "Paste a link to your latest.log from McLogs (https://mclo.gs/) or something similiar."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: "Additional Context"
+      description: "Add any other relevant context about the problem, such as changes to configuration files or world settings."
