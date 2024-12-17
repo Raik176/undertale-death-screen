@@ -69,7 +69,7 @@ public class UndertaleDeathScreen extends Screen {
             }
             int stage = (this.age < 25) ? 0 : Math.min(3, this.age - 25);
             guiGraphics.blitSprite(
-                    //if >=1.21.2
+                    //?if >=1.21.2
                     RenderType::guiTextured,
                     originalAccess.undertale_death_animation$isHardcore() ?
                             HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
