@@ -8,9 +8,9 @@ plugins {
 
 val minecraft = stonecutter.current.version
 
-extra["githubRepo"] = "CHANGE/THIS"
-extra["modrinthId"] = "N/A"
-extra["curseforgeId"] = "N/A"
+extra["githubRepo"] = "Raik176/undertale-death-screen"
+extra["modrinthId"] = "lawTOUCq"
+extra["curseforgeId"] = "1161177"
 
 version = "${mod.version}+$minecraft"
 group = "${mod.group}.common"

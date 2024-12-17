@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "${group}.${id}.fabric.TemplateModFabric"
+      "${group}.${id}.fabric.UndertaleDeathScreenFabric"
     ]
   },
   "mixins": [
@@ -23,6 +23,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.15",
+    "fabric-api": "*",
     "minecraft": "${minecraft}"
   }
 }

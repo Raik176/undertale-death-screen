@@ -17,12 +17,12 @@ stonecutter {
     centralScript = "build.gradle.kts"
     kotlinController = true
     create(rootProject) {
-        versions("1.20.1", "1.20.6", "1.21.1")
+        versions("1.20.6", "1.21.2")
         vcsVersion = "1.20.6"
         branch("fabric")
         branch("forge")
-        branch("neoforge") { versions("1.20.6", "1.21.1") }
+        branch("neoforge")
     }
 }
 
-rootProject.name = "Template Mod"
+rootProject.name = "Undertale Death Screen"

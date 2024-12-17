@@ -4,10 +4,10 @@ plugins {
     id("architectury-plugin") version "3.4-SNAPSHOT" apply false
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
 }
-stonecutter active "1.20.6" /* [SC] DO NOT EDIT */
+stonecutter active "1.21.2" /* [SC] DO NOT EDIT */
 stonecutter.automaticPlatformConstants = true
 
-for (it in listOf("Mods", "Github", "Modrinth")) {
+for (it in listOf("Mods", "Github", "Modrinth", "Curseforge")) {
     stonecutter registerChiseled tasks.register("chiseledPublish$it", stonecutter.chiseled) {
         group = "publishing"
         ofTask("publish$it")

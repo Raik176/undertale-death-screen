@@ -46,6 +46,7 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${mod.dep("fabric_loader")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${common.mod.dep("fabric_api")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionFabric")) { isTransitive = false }
@@ -132,11 +133,15 @@ publishMods {
         projectId = common.extra["modrinthId"].toString()
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
         projectDescription = providers.fileContents(common.layout.projectDirectory.file("../../README.md")).asText.get()
+
+        requires("fabric-api")
     }
     curseforge {
         accessToken = providers.environmentVariable("CF_API_KEY")
         projectId = common.extra["curseforgeId"].toString()
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
+
+        requires("fabric-api")
     }
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
