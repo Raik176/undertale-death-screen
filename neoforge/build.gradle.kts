@@ -44,6 +44,7 @@ configurations {
 
 repositories {
     maven("https://maven.neoforged.net/releases/")
+    maven("https://maven.shedaniel.me/")
 }
 
 dependencies {
@@ -54,6 +55,8 @@ dependencies {
         implementation(it)
         include(it)
     }
+
+    modImplementation("me.shedaniel.cloth:cloth-config-neoforge:${common.mod.dep("cloth_config")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionNeoForge")) { isTransitive = false }
@@ -111,7 +114,8 @@ tasks.processResources {
         "description" to mod.prop("description"),
         "author" to mod.prop("author"),
         "license" to mod.prop("license"),
-        "minecraft" to convertMinecraftTargets()
+        "minecraft" to convertMinecraftTargets(),
+        "cloth_config_version" to common.mod.dep("cloth_config")
     )
 }
 
@@ -140,11 +144,15 @@ publishMods {
         projectId = common.extra["modrinthId"].toString()
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
         projectDescription = providers.fileContents(common.layout.projectDirectory.file("../../README.md")).asText.get()
+
+        optional("cloth-config")
     }
     curseforge {
         accessToken = providers.environmentVariable("CF_API_KEY")
         projectId = common.extra["curseforgeId"].toString()
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
+
+        optional("cloth-config")
     }
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")

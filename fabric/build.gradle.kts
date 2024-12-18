@@ -42,11 +42,21 @@ configurations {
     get("developmentFabric").extendsFrom(commonBundle)
 }
 
+repositories {
+    maven("https://maven.shedaniel.me/")
+    maven("https://maven.terraformersmc.com/")
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${mod.dep("fabric_loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${common.mod.dep("fabric_api")}")
+
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${common.mod.dep("cloth_config")}") {
+        exclude(group = "net.fabricmc.fabric-api")
+    }
+    modImplementation("com.terraformersmc:modmenu:${common.mod.dep("modmenu")}")
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionFabric")) { isTransitive = false }
@@ -95,6 +105,8 @@ fun convertMinecraftTargets(): String {
     return ">=${split[0]} <=${split[split.size-1]}"
 }
 
+
+
 tasks.processResources {
     properties(listOf("fabric.mod.json"),
         "id" to mod.id,
@@ -104,7 +116,11 @@ tasks.processResources {
         "author" to mod.prop("author"),
         "license" to mod.prop("license"),
         "minecraft" to convertMinecraftTargets(),
-        "group" to mod.group
+        "group" to mod.group,
+        "fabric_loader_version" to mod.dep("fabric_loader"),
+        "fabric_api_version" to common.mod.dep("fabric_api"),
+        "cloth_config_version" to common.mod.dep("cloth_config"),
+        "modmenu_version" to common.mod.dep("modmenu")
     )
 }
 
@@ -135,6 +151,8 @@ publishMods {
         projectDescription = providers.fileContents(common.layout.projectDirectory.file("../../README.md")).asText.get()
 
         requires("fabric-api")
+        optional("cloth-config")
+        optional("modmenu")
     }
     curseforge {
         accessToken = providers.environmentVariable("CF_API_KEY")
@@ -142,6 +160,8 @@ publishMods {
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
 
         requires("fabric-api")
+        optional("cloth-config")
+        optional("modmenu")
     }
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")

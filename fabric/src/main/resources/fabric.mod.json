@@ -16,14 +16,21 @@
   "entrypoints": {
     "main": [
       "${group}.${id}.fabric.UndertaleDeathScreenFabric"
+    ],
+    "modmenu": [
+      "${group}.${id}.fabric.compat.ModMenuCompat"
     ]
   },
   "mixins": [
     "${id}-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15",
-    "fabric-api": "*",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
     "minecraft": "${minecraft}"
+  },
+  "suggests": {
+    "cloth-config": ">=${cloth_config_version}",
+    "modmenu": ">=${modmenu_version}"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "undertale_death_screen.config.shard_render_style": "Shard Render Style",
+  "undertale_death_screen.config.shard_render_style.animated": "Animated",
+  "undertale_death_screen.config.shard_render_style.rotated": "Rotated",
+  "undertale_death_screen.config.shard_render_style.ttp": "Configures the style of the shattered heart pieces.\n  Animated: The piece will animate but not rotate.\n  Rotated: The piece will rotate but will not be animated.",
+
+  "undertale_death_screen.config.music_turnoff": "Stop all music?",
+  "undertale_death_screen.config.music_turnoff.ttp": "Whether to stop all sound & music whenever you die"}

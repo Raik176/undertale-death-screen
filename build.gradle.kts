@@ -23,6 +23,10 @@ architectury.common(stonecutter.tree.branches.mapNotNull {
     else it.prop("loom.platform")
 })
 
+repositories {
+    maven("https://maven.shedaniel.me/")
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft")
     mappings(loom.officialMojangMappings())
@@ -30,6 +34,10 @@ dependencies {
     "io.github.llamalad7:mixinextras-common:${mod.dep("mixin_extras")}".let {
         annotationProcessor(it)
         implementation(it)
+    }
+
+    modCompileOnly("me.shedaniel.cloth:cloth-config-forge:${mod.dep("cloth_config")}") {
+        exclude(group = "net.minecraftforge")
     }
 }
 
@@ -54,6 +62,12 @@ java {
 tasks.build {
     group = "versioned"
     description = "Must run through 'chiseledBuild'"
+}
+
+tasks.processResources {
+    properties(listOf("${mod.id}-common.mixins.json"),
+        "version" to minecraft
+    )
 }
 
 publishMods {

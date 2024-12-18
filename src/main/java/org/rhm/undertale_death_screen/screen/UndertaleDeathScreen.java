@@ -8,6 +8,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import org.joml.Quaternionf;
+import org.rhm.undertale_death_screen.Config;
 import org.rhm.undertale_death_screen.DeathScreenAccess;
 import org.rhm.undertale_death_screen.UndertaleDeathScreenCommon;
 import org.rhm.undertale_death_screen.registry.SoundEventRegistry;
@@ -16,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//?if >=1.21.2
-import net.minecraft.client.renderer.RenderType;
+//? if >=1.21.2
+/*import net.minecraft.client.renderer.RenderType;*/
 
 public class UndertaleDeathScreen extends Screen {
     private static final ResourceLocation HEART_TEXTURE_LOCATION = UndertaleDeathScreenCommon.id("undertale_death/heart_shatter");
@@ -46,12 +47,16 @@ public class UndertaleDeathScreen extends Screen {
 
     @Override
     protected void init() {
+        if (UndertaleDeathScreenCommon.config.getShouldStopSound()) {
+            Minecraft.getInstance().getMusicManager().stopPlaying();
+            Minecraft.getInstance().getSoundManager().stop();
+        }
         this.age = 0;
         this.finishedAge = 0;
         this.pieces = new ArrayList<>();
         this.hasFinished = false;
         if (Minecraft.getInstance().player != null) // to stop idea from complaining, this should never actually not fire
-            this.randomSource = Minecraft.getInstance().player.getRandom();
+            this.randomSource = Minecraft.getInstance().player.level().getRandom();
     }
 
     @Override
@@ -64,13 +69,10 @@ public class UndertaleDeathScreen extends Screen {
         if (hasFinished)
             originalScreen.render(guiGraphics, i, j, f);
         else if (this.age < 47) {
-            if (this.age == 25) {
-                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEventRegistry.HEART_SHATTER_NOISES.get(), 1));
-            }
             int stage = (this.age < 25) ? 0 : Math.min(3, this.age - 25);
             guiGraphics.blitSprite(
-                    //?if >=1.21.2
-                    RenderType::guiTextured,
+                    //? if >=1.21.2
+                    /*RenderType::guiTextured,*/
                     originalAccess.undertale_death_animation$isHardcore() ?
                             HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
                     HEART_TEXTURE_WIDTH,
@@ -95,7 +97,7 @@ public class UndertaleDeathScreen extends Screen {
                         randomSource.nextInt(HeartPiece.PIECE_TEXTURE_WIDTH / HeartPiece.PIECE_WIDTH),
                         0,
                         randomSource.nextDouble() * 360,
-                        randomSource.nextDouble() * 4 - 2
+                        randomSource.nextDouble() * 8 - 2
                 ));
             }
         } else { // Render the pieces
@@ -124,6 +126,9 @@ public class UndertaleDeathScreen extends Screen {
             }
         }
         this.age++;
+        if (this.age == 25) {
+            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEventRegistry.HEART_SHATTER_NOISES.get(), 1));
+        }
         super.tick();
     }
 
@@ -149,12 +154,19 @@ public class UndertaleDeathScreen extends Screen {
         private static final int PIECE_TEXTURE_HEIGHT = 5;
 
         private static final int PIECE_WIDTH = 5;
+        private static final int FRAME_DURATION = 4;
+        private static final int TOTAL_FRAMES = PIECE_TEXTURE_WIDTH / PIECE_WIDTH;
+
+        private final boolean animated;
 
         private double x, y;
         private double vx, vy;
         private final int textureX, textureY;
         private double rotation;
         private final double angularVelocity;
+
+        private int currentFrame = 0;
+        private int frameTickCounter = 0;
 
         public HeartPiece(double x, double y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity) {
             this.x = x;
@@ -165,6 +177,8 @@ public class UndertaleDeathScreen extends Screen {
             this.textureY = textureY;
             this.rotation = rotation;
             this.angularVelocity = angularVelocity;
+
+            this.animated = UndertaleDeathScreenCommon.config.getStyle() == Config.ShardRenderStyle.ANIMATED;
         }
 
         public void renderTick() {
@@ -180,21 +194,31 @@ public class UndertaleDeathScreen extends Screen {
             } else if (rotation < 0) {
                 rotation += 360;
             }
+
+            if (animated) {
+                frameTickCounter++;
+                if (frameTickCounter >= FRAME_DURATION) {
+                    frameTickCounter = 0;
+                    currentFrame = (currentFrame + 1) % TOTAL_FRAMES;
+                }
+            }
         }
 
         public void render(GuiGraphics guiGraphics) {
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(x, y, 0);
-            guiGraphics.pose().mulPose(new Quaternionf().rotateZ((float) Math.toRadians(rotation)));
-            guiGraphics.pose().translate(-PIECE_WIDTH / 2.0, -PIECE_TEXTURE_HEIGHT / 2.0, 0);
+            if (!animated) {
+                guiGraphics.pose().mulPose(new Quaternionf().rotateZ((float) Math.toRadians(rotation)));
+                guiGraphics.pose().translate(-PIECE_WIDTH / 2.0, -PIECE_TEXTURE_HEIGHT / 2.0, 0);
+            }
 
             guiGraphics.blitSprite(
-                    //?if >=1.21.2
-                    RenderType::guiTextured,
+                    //? if >=1.21.2
+                    /*RenderType::guiTextured,*/
                     PIECES_TEXTURE_LOCATION,
                     PIECE_TEXTURE_WIDTH,
                     PIECE_TEXTURE_HEIGHT,
-                    textureX,
+                    animated ? currentFrame * PIECE_WIDTH : textureX,
                     textureY,
                     0,
                     0,

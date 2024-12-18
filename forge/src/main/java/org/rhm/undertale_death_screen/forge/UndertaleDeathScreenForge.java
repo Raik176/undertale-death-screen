@@ -1,27 +1,34 @@
 package org.rhm.undertale_death_screen.forge;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.rhm.undertale_death_screen.UndertaleDeathScreenBase;
 import org.rhm.undertale_death_screen.UndertaleDeathScreenCommon;
 import net.minecraftforge.fml.common.Mod;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 @Mod(UndertaleDeathScreenCommon.MOD_ID)
 public class UndertaleDeathScreenForge {
 	public UndertaleDeathScreenForge(FMLJavaModLoadingContext context) {
 		UndertaleDeathScreenCommon.init(new Impl());
-		Impl.register(context.getModEventBus());
+
+		IEventBus eventBus = context.getModEventBus();
+		Impl.register(eventBus);
+
+		eventBus.addListener(this::clientSetup);
+	}
+
+	private void clientSetup(FMLClientSetupEvent event) {
+		MinecraftForge.registerConfigScreen(UndertaleDeathScreenCommon::getConfigScreen);
 	}
 
 	public static class Impl implements UndertaleDeathScreenBase {
@@ -38,5 +45,15 @@ public class UndertaleDeathScreenForge {
 					() -> SoundEvent.createVariableRangeEvent(UndertaleDeathScreenCommon.id(path))
 			);
 		}
-	};
+
+		@Override
+		public boolean isModLoaded(String id) {
+			return ModList.get().isLoaded(id);
+		}
+
+		@Override
+		public Path getConfigDir() {
+			return FMLPaths.CONFIGDIR.get();
+		}
+	}
 }

@@ -1,1 +1,1 @@
-No changelog provided.
+Add cloth config support, fix crash on 1.21.1
