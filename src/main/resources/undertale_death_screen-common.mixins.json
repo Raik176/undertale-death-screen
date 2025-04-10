@@ -10,5 +10,6 @@
   },
   "client": [
     "DeathScreenMixin"
-  ]
+  ],
+  "refmap": "${modId}-refmap.json"
 }

@@ -48,6 +48,11 @@ loom {
             options.put("mark-corresponding-synthetics", "1")
         }
     }
+
+    @Suppress("UnstableApiUsage")
+    mixin {
+        defaultRefmapName = "${mod.id}-refmap.json"
+    }
 }
 
 java {
@@ -65,7 +70,7 @@ tasks.build {
 
 tasks.processResources {
     properties(listOf("${mod.id}-common.mixins.json"),
-        "version" to minecraft
+        "modId" to mod.id
     )
 }
 
