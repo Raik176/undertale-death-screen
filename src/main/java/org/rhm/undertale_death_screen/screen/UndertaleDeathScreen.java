@@ -4,9 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.rhm.undertale_death_screen.Config;
 import org.rhm.undertale_death_screen.DeathScreenAccess;
@@ -18,16 +24,17 @@ import java.util.List;
 
 
 //? if >=1.21.2
-/*import net.minecraft.client.renderer.RenderType;*/
+import net.minecraft.client.renderer.RenderType;
 
 public class UndertaleDeathScreen extends Screen {
     private static final ResourceLocation HEART_TEXTURE_LOCATION = UndertaleDeathScreenCommon.id("undertale_death/heart_shatter");
     private static final ResourceLocation HEART_TEXTURE_LOCATION_HC = UndertaleDeathScreenCommon.id("undertale_death/heart_shatter_hardcore");
 
-    private static final int HEART_TEXTURE_WIDTH = 52;
-    private static final int HEART_TEXTURE_HEIGHT = 15;
-
     private static final int HEART_WIDTH = 13;
+    private static final int HEART_HEIGHT = 15;
+
+    private static final int HEART_TEXTURE_WIDTH = HEART_WIDTH*4;
+    private static final int HEART_TEXTURE_HEIGHT = HEART_HEIGHT;
 
 
     private final DeathScreen originalScreen;
@@ -37,6 +44,12 @@ public class UndertaleDeathScreen extends Screen {
     private int age;
     private int finishedAge;
     private boolean hasFinished;
+    private boolean shouldStart;
+    private double progress;
+
+    private int bgmProgress;
+    @Nullable
+    private BGMSoundInstance bgmSoundInstance;
 
     public UndertaleDeathScreen(DeathScreen originalScreen) {
         super(originalScreen.getTitle());
@@ -53,35 +66,53 @@ public class UndertaleDeathScreen extends Screen {
         }
         this.age = 0;
         this.finishedAge = 0;
+        this.bgmProgress = 0;
+        this.progress = 0;
         this.pieces = new ArrayList<>();
         this.hasFinished = false;
+        this.shouldStart = !UndertaleDeathScreenCommon.config.getCenteredHeartAnimation() && UndertaleDeathScreenCommon.config.getCenteredHeart();
         if (Minecraft.getInstance().player != null) // to stop idea from complaining, this should never actually not fire
             this.randomSource = Minecraft.getInstance().player.level().getRandom();
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        super.render(guiGraphics, i, j, f);
-        // love the random magic numbers
-        int x = (guiGraphics.guiWidth() / 2) - 91 - 2; // -2 because original heart is 9x9 but this one's 13x13
-        int y = guiGraphics.guiHeight() - 39 - 3; // for some reason needs to be -3 here
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        super.render(guiGraphics, mouseX, mouseY, delta);
 
-        if (hasFinished)
-            originalScreen.render(guiGraphics, i, j, f);
-        else if (this.age < 47) {
-            int stage = (this.age < 25) ? 0 : Math.min(3, this.age - 25);
-            guiGraphics.blitSprite(
-                    //? if >=1.21.2
-                    /*RenderType::guiTextured,*/
-                    originalAccess.undertale_death_animation$isHardcore() ?
-                            HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
-                    HEART_TEXTURE_WIDTH,
-                    HEART_TEXTURE_HEIGHT,
-                    HEART_WIDTH * stage, 0,
-                    x, y,
-                    HEART_WIDTH,
-                    HEART_TEXTURE_HEIGHT
+        int x;
+        int y;
+
+        if (UndertaleDeathScreenCommon.config.getCenteredHeart()) {
+            x = (guiGraphics.guiWidth()/2) - (HEART_WIDTH/2);
+            y = (guiGraphics.guiHeight()/2) - (HEART_HEIGHT/2);
+        } else {
+            x = (guiGraphics.guiWidth() / 2) - 91 - 2;
+            y = guiGraphics.guiHeight() - 39 - 3;
+        }
+
+        if (!shouldStart) {
+            progress = Math.min(progress + delta * UndertaleDeathScreenCommon.config.getCenteredHeartSpeed(), 1);
+            double easedProgress = Mth.smoothstep(progress);
+
+            int startX = (guiGraphics.guiWidth() / 2) - 91 - 2;
+            int startY = guiGraphics.guiHeight() - 39 - 3;
+
+            int lerpedX = (int) Mth.lerp(easedProgress, startX, x);
+            int lerpedY = (int) Mth.lerp(easedProgress, startY, y);
+
+            renderHeart(
+                    guiGraphics,
+                    0,
+                    lerpedX,
+                    lerpedY
             );
+
+            if (lerpedX == x && lerpedY == y)
+                shouldStart = true;
+        } else if (hasFinished)
+            originalScreen.render(guiGraphics, mouseX, mouseY, delta);
+        else if (this.age < 47) {
+            renderHeart(guiGraphics, (this.age < 25) ? 0 : Math.min(3, this.age - 25), x, y);
         } else if (pieces.isEmpty()) {
             for (int i1 = 0; i1 < randomSource.nextInt(6, 8); i1++) {
                 double angle = randomSource.nextDouble() * 2 * Math.PI;
@@ -101,11 +132,42 @@ public class UndertaleDeathScreen extends Screen {
                 ));
             }
         } else { // Render the pieces
+            if (bgmProgress != -1 && bgmProgress++ >= 15) {
+                if (UndertaleDeathScreenCommon.config.getDetermination()) {
+                    bgmSoundInstance = new BGMSoundInstance(SoundEventRegistry.DETERMINATION.get());
+                    Minecraft.getInstance().getSoundManager().play(bgmSoundInstance);
+                    bgmSoundInstance.fadeIn();
+                }
+                bgmProgress = -1;
+            }
+
             for (HeartPiece piece : pieces) {
                 piece.renderTick();
                 piece.render(guiGraphics);
             }
         }
+    }
+
+    private void renderHeart(GuiGraphics guiGraphics, int stage, int x, int y) {
+        guiGraphics.blitSprite(
+                //? if >=1.21.2
+                RenderType::guiTextured,
+                originalAccess.undertale_death_animation$isHardcore() ?
+                        HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
+                HEART_TEXTURE_WIDTH,
+                HEART_TEXTURE_HEIGHT,
+                HEART_WIDTH * stage, 0,
+                x, y,
+                HEART_WIDTH,
+                HEART_TEXTURE_HEIGHT
+        );
+    }
+
+    @Override
+    public void removed() {
+        if (bgmSoundInstance != null)
+            Minecraft.getInstance().getSoundManager().stop(bgmSoundInstance);
+        super.removed();
     }
 
     @Override
@@ -117,6 +179,8 @@ public class UndertaleDeathScreen extends Screen {
 
     @Override
     public void tick() {
+        Minecraft.getInstance().getMusicManager().stopPlaying();
+
         if ((!pieces.isEmpty() && pieces.stream().allMatch(piece -> piece.y >= this.height)) && !hasFinished) {
             if (finishedAge == 0) {
                 finishedAge = age;
@@ -214,7 +278,7 @@ public class UndertaleDeathScreen extends Screen {
 
             guiGraphics.blitSprite(
                     //? if >=1.21.2
-                    /*RenderType::guiTextured,*/
+                    RenderType::guiTextured,
                     PIECES_TEXTURE_LOCATION,
                     PIECE_TEXTURE_WIDTH,
                     PIECE_TEXTURE_HEIGHT,
@@ -228,5 +292,31 @@ public class UndertaleDeathScreen extends Screen {
 
             guiGraphics.pose().popPose();
         }
+    }
+
+    public static class BGMSoundInstance extends AbstractTickableSoundInstance {
+        private int fadeDir;
+        private int fade;
+
+        public BGMSoundInstance(SoundEvent soundEvent) {
+            super(soundEvent, SoundSource.MUSIC, SoundInstance.createUnseededRandom());
+            this.looping = true;
+            this.delay = 0;
+            this.volume = 1;
+            this.relative = true;
+        }
+
+        @Override
+        public void tick() {
+            this.fade += this.fadeDir;
+            this.volume = Mth.clamp((float)this.fade / 5, 0, 1);
+        }
+
+        public void fadeIn() {
+            this.fade = Math.max(0, this.fade);
+            this.fadeDir = 1;
+        }
+
+
     }
 }

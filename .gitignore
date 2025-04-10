@@ -42,3 +42,5 @@ replay_*.log
 # other
 
 .env
+.cache/
+stonecutter-cache/

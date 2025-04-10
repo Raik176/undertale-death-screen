@@ -15,24 +15,76 @@ import java.nio.file.Files;
 
 public class Config {
     public static final ShardRenderStyle DEFAULT_STYLE = ShardRenderStyle.ROTATION;
+
     public static final boolean DEFAULT_MUSIC_TURNOFF = true;
 
+    public static final boolean DEFAULT_DETERMINATION = true;
+
+    public static final boolean DEFAULT_CENTERED_HEART = true;
+    public static final boolean DEFAULT_CENTERED_HEART_ANIMATION = false;
+    public static final double DEFAULT_CENTERED_HEART_SPEED = 0.15;
+
+
     private ShardRenderStyle style;
+
     private boolean musicTurnoff;
+
+    private boolean determination;
+
+    private boolean centeredHeart;
+    private boolean centeredHeartAnimation;
+    private double centeredHeartSpeed;
 
     public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
                     ShardRenderStyle.CODEC.optionalFieldOf("shardRenderStyle", DEFAULT_STYLE).forGetter(Config::getStyle),
-                    Codec.BOOL.optionalFieldOf("musicTurnoff", DEFAULT_MUSIC_TURNOFF).forGetter(Config::getShouldStopSound)
+                    Codec.BOOL.optionalFieldOf("musicTurnoff", DEFAULT_MUSIC_TURNOFF).forGetter(Config::getShouldStopSound),
+                    Codec.BOOL.optionalFieldOf("centeredHeart", DEFAULT_CENTERED_HEART).forGetter(Config::getCenteredHeart),
+                    Codec.BOOL.optionalFieldOf("centeredHeartAnimation", DEFAULT_CENTERED_HEART_ANIMATION).forGetter(Config::getCenteredHeartAnimation),
+                    Codec.DOUBLE.optionalFieldOf("centeredHeartSpeed", DEFAULT_CENTERED_HEART_SPEED).forGetter(Config::getCenteredHeartSpeed),
+                    Codec.BOOL.optionalFieldOf("playDetermination", DEFAULT_DETERMINATION).forGetter(Config::getDetermination)
             ).apply(instance, Config::new));
 
-    public Config(ShardRenderStyle style, boolean musicTurnoff) {
+    public Config(ShardRenderStyle style, boolean musicTurnoff, boolean centeredHeart, boolean centeredHeartAnimation, double centeredHeartSpeed, boolean determination) {
         this.style = style;
+        this.musicTurnoff = musicTurnoff;
+        this.centeredHeart = centeredHeart;
+        this.centeredHeartAnimation = centeredHeartAnimation;
+        this.centeredHeartSpeed = centeredHeartSpeed;
+        this.determination = determination;
     }
 
     public Config() {
         this.style = DEFAULT_STYLE;
         this.musicTurnoff = DEFAULT_MUSIC_TURNOFF;
+    }
+
+    public boolean getDetermination() {
+        return determination;
+    }
+    public void setDetermination(boolean value) {
+        determination = value;
+    }
+
+    public double getCenteredHeartSpeed() {
+        return centeredHeartSpeed;
+    }
+    public void setCenteredHeartSpeed(double value) {
+        centeredHeartSpeed = value;
+    }
+
+    public boolean getCenteredHeartAnimation() {
+        return centeredHeartAnimation;
+    }
+    public void setCenteredHeartAnimation(boolean value) {
+        centeredHeartAnimation = value;
+    }
+
+    public boolean getCenteredHeart() {
+        return centeredHeart;
+    }
+    public void setCenteredHeart(boolean value) {
+        centeredHeart = value;
     }
 
     public ShardRenderStyle getStyle() {

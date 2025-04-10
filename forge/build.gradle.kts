@@ -4,10 +4,11 @@ import net.fabricmc.loom.task.RemapJarTask
 import org.gradle.kotlin.dsl.version
 
 plugins {
+    id("dev.kikugie.stonecutter")
     id("dev.architectury.loom")
     id("architectury-plugin")
     id("com.github.johnrengelman.shadow")
-    id("me.modmuss50.mod-publish-plugin") version "0.7.4"
+    id("me.modmuss50.mod-publish-plugin")
 }
 
 val loader = prop("loom.platform")!!
@@ -16,7 +17,7 @@ if (minecraft == "1.21.2") // forge only supports 1.21.3 and neoforge only suppo
     minecraft = "1.21.3"
 val common: Project = requireNotNull(stonecutter.node.sibling("")) {
     "No common project for $project"
-}
+}.project
 
 version = "${mod.version}+$minecraft"
 group = "${mod.group}.$loader"
@@ -58,7 +59,10 @@ dependencies {
         include(it)
     }
 
-    modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
+    // cloth config doesn't support forge 1.21.5 (yet?)
+    if (stonecutter.eval(minecraft, "<1.21.5")) {
+        modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")
+    }
 
     commonBundle(project(common.path, "namedElements")) { isTransitive = false }
     shadowBundle(project(common.path, "transformProductionForge")) { isTransitive = false }
@@ -151,6 +155,7 @@ publishMods {
         minecraftVersions.addAll(common.mod.prop("mc_targets").split(" "))
         projectDescription = providers.fileContents(common.layout.projectDirectory.file("../../README.md")).asText.get()
 
+        // probably shouldn't remove this here in case it ever gets supported
         optional("cloth-config")
     }
     curseforge {

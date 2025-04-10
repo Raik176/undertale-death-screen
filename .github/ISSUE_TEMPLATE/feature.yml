@@ -1,0 +1,29 @@
+---
+name: Feature
+description: "Suggest a new feature"
+title: "[FEAT] "
+labels: feature
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: "Why this feature?"
+      description: "Why do you want this feature to be added?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: improvement
+    attributes:
+      label: "How would this improve the mod?"
+      description: "How do you think this feature would improve this mod?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: mod_loader
+    attributes:
+      label: "Describe the feature"
+      description: "A clear and concise description of the feature or suggestion."
+    validations:
+      required: true

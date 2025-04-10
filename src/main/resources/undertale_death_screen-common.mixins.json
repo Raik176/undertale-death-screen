@@ -3,10 +3,12 @@
   "package": "org.rhm.undertale_death_screen.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "DeathScreenMixin"
+
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "undertale_death_screen-common-${version}-refmap.json"
+  "client": [
+    "DeathScreenMixin"
+  ]
 }
