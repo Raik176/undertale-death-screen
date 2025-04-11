@@ -17,7 +17,7 @@ stonecutter {
     centralScript = "build.gradle.kts"
     kotlinController = true
     create(rootProject) {
-        versions(/*"1.20", */"1.20.6", "1.21.2", "1.21.5")
+        versions("1.20", "1.20.6", "1.21.2", "1.21.5")
         vcsVersion = "1.20.6"
         branch("fabric")
         branch("forge")

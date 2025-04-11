@@ -104,7 +104,7 @@ public class Config {
 
     public void save(File location) {
         DataResult<JsonElement> result = CODEC.encodeStart(JsonOps.INSTANCE, this);
-        if (result.error().isPresent() || result.isError() || result.result().isEmpty()) {
+        if (result.error().isPresent() /*? if >=1.20.6 {*/ || result.isError() /*?}*/ || result.result().isEmpty()) {
             UndertaleDeathScreenCommon.logger.warn("Failed to encode the configuration. Configuration not saved.");
             result.error().ifPresent(error -> UndertaleDeathScreenCommon.logger.error("Error details: {}", error.message()));
         } else {

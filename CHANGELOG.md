@@ -1,9 +1,5 @@
-Fix: "Stop all music?" option wasn't loaded correctly.
+Feat: 1.20.x support
 
-Feat: 1.21.5 support
+Fix: crashes on some versions due to arch-loom using the wrong refmap name
 
-Feat: added optional configurable background music
-
-Feat: added an option to toggle whether the heart is centered or not
-
-Feat: added an option to toggle whether the heart is neatly animated from the heart position to the center of the screen
+Refactor: Moved entire code to be inside a mixin instead of a wrapper screen

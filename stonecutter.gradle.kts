@@ -5,7 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     id("me.modmuss50.mod-publish-plugin") version "0.7.4" apply false
 }
-stonecutter active "1.21.5" /* [SC] DO NOT EDIT */
+stonecutter active "1.20.6" /* [SC] DO NOT EDIT */
 
 for (it in listOf("Mods", "Github", "Modrinth", "Curseforge")) {
     stonecutter registerChiseled tasks.register("chiseledPublish$it", stonecutter.chiseled) {

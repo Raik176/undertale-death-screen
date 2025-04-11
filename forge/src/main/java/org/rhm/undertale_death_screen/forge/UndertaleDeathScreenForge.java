@@ -28,6 +28,8 @@ public class UndertaleDeathScreenForge {
 	}
 
 	private void clientSetup(FMLClientSetupEvent event) {
+		//idk what the older replacement for this is
+		//? if >=1.20.6
 		MinecraftForge.registerConfigScreen(UndertaleDeathScreenCommon::getConfigScreen);
 	}
 

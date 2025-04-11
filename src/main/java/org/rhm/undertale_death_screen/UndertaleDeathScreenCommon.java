@@ -40,7 +40,7 @@ public class UndertaleDeathScreenCommon {
 			try (FileReader reader = new FileReader(configFile)) {
 				JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
 				DataResult<Pair<Config, JsonElement>> result = Config.CODEC.decode(JsonOps.INSTANCE, object);
-				if (result.error().isPresent() || result.isError() || result.result().isEmpty()) {
+				if (result.error().isPresent() /*? if >=1.20.6 {*/|| result.isError()/*?}*/ || result.result().isEmpty()) {
 					logger.warn("Failed to parse configuration file. Using default configuration.");
 					result.error().ifPresent(error -> logger.error("Error details: {}", error.message()));
 					config = new Config();
