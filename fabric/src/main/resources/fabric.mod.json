@@ -8,7 +8,9 @@
     "${author}"
   ],
   "contact": {
-
+    "homepage": "https://rhm176.de",
+    "issues": "https://github.com/Raik176/undertale-death-screen/issues",
+    "sources": "https://github.com/Raik176/undertale-death-screen"
   },
   "license": "${license}",
   "icon": "assets/${id}/icon.png",

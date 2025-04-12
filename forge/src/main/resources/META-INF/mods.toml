@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "*"
 license = "${license}"
+issueTrackerURL = "https://github.com/Raik176/undertale-death-screen/issues"
 
 [[mods]]
 modId = "${id}"

@@ -17,6 +17,12 @@ base {
     archivesName.set("${mod.id}-common")
 }
 
+tasks.jar {
+    from(rootProject.file("LICENSE")) {
+        rename { "${mod.id}_LICENSE.md" }
+    }
+}
+
 architectury.common(stonecutter.tree.branches.mapNotNull {
     if (stonecutter.current.project !in it) null
     else it.project.prop("loom.platform")
