@@ -13,32 +13,32 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 
 public class UndertaleDeathScreenFabric implements ModInitializer {
-	@Override
-	public void onInitialize() {
-		UndertaleDeathScreenCommon.init(new Impl());
-	}
+    @Override
+    public void onInitialize() {
+        UndertaleDeathScreenCommon.init(new Impl());
+    }
 
-	public static final class Impl implements UndertaleDeathScreenBase {
+    public static final class Impl implements UndertaleDeathScreenBase {
 
-		@Override
-		public Supplier<SoundEvent> registerSoundEvent(String path) {
-			ResourceLocation location = UndertaleDeathScreenCommon.id(path);
-			SoundEvent event = Registry.register(
-					BuiltInRegistries.SOUND_EVENT,
-					location,
-					SoundEvent.createVariableRangeEvent(location)
-			);
-			return () -> event;
-		}
+        @Override
+        public Supplier<SoundEvent> registerSoundEvent(String path) {
+            ResourceLocation location = UndertaleDeathScreenCommon.id(path);
+            SoundEvent event = Registry.register(
+                    BuiltInRegistries.SOUND_EVENT,
+                    location,
+                    SoundEvent.createVariableRangeEvent(location)
+            );
+            return () -> event;
+        }
 
-		@Override
-		public boolean isModLoaded(String id) {
-			return FabricLoader.getInstance().isModLoaded(id);
-		}
+        @Override
+        public boolean isModLoaded(String id) {
+            return FabricLoader.getInstance().isModLoaded(id);
+        }
 
-		@Override
-		public Path getConfigDir() {
-			return FabricLoader.getInstance().getConfigDir();
-		}
-	}
+        @Override
+        public Path getConfigDir() {
+            return FabricLoader.getInstance().getConfigDir();
+        }
+    }
 }

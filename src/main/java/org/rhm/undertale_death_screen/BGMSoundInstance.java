@@ -21,7 +21,7 @@ public class BGMSoundInstance extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         this.fade += this.fadeDir;
-        this.volume = Mth.clamp((float)this.fade / 5, 0, 1);
+        this.volume = Mth.clamp((float) this.fade / 5, 0, 1);
     }
 
     public void fadeIn() {

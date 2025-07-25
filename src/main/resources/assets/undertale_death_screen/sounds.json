@@ -1,14 +1,18 @@
 {
   "heart_shatter_noises": {
     "subtitle": "subtitles.undertale_death_screen.heart_shatter",
-    "sounds": ["undertale_death_screen:heart_shatter_noises"]
+    "sounds": [
+      "undertale_death_screen:heart_shatter_noises"
+    ]
   },
   "determination": {
     "subtitle": "subtitles.undertale_death_screen.music.determination",
-    "sounds": [{
-      "name": "undertale_death_screen:music/determination",
-      "stream": true,
-      "volume": 0.4
-    }]
+    "sounds": [
+      {
+        "name": "undertale_death_screen:music/determination",
+        "stream": true,
+        "volume": 0.4
+      }
+    ]
   }
 }

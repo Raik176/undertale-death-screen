@@ -1,67 +1,79 @@
 package org.rhm.undertale_death_screen;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Config {
-    public static final ShardRenderStyle DEFAULT_STYLE = ShardRenderStyle.ROTATION;
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Path CONFIG_PATH = UndertaleDeathScreenCommon.impl.getConfigDir().resolve(UndertaleDeathScreenCommon.MOD_ID + ".json");
 
-    public static final boolean DEFAULT_MUSIC_TURNOFF = true;
+    public static final Config INSTANCE = load();
 
-    public static final boolean DEFAULT_DETERMINATION = true;
+    private ShardRenderStyle style = ShardRenderStyle.ROTATION;
+    private boolean musicTurnoff = true;
+    private boolean determination = true;
+    private boolean centeredHeart = true;
+    private boolean centeredHeartAnimation = false;
+    private double centeredHeartSpeed = 0.15;
+    private boolean dynamicHeart = true;
 
-    public static final boolean DEFAULT_CENTERED_HEART = true;
-    public static final boolean DEFAULT_CENTERED_HEART_ANIMATION = false;
-    public static final double DEFAULT_CENTERED_HEART_SPEED = 0.15;
-
-
-    private ShardRenderStyle style;
-
-    private boolean musicTurnoff;
-
-    private boolean determination;
-
-    private boolean centeredHeart;
-    private boolean centeredHeartAnimation;
-    private double centeredHeartSpeed;
-
-    public static final Codec<Config> CODEC = RecordCodecBuilder.create((instance) ->
-            instance.group(
-                    ShardRenderStyle.CODEC.optionalFieldOf("shardRenderStyle", DEFAULT_STYLE).forGetter(Config::getStyle),
-                    Codec.BOOL.optionalFieldOf("musicTurnoff", DEFAULT_MUSIC_TURNOFF).forGetter(Config::getShouldStopSound),
-                    Codec.BOOL.optionalFieldOf("centeredHeart", DEFAULT_CENTERED_HEART).forGetter(Config::getCenteredHeart),
-                    Codec.BOOL.optionalFieldOf("centeredHeartAnimation", DEFAULT_CENTERED_HEART_ANIMATION).forGetter(Config::getCenteredHeartAnimation),
-                    Codec.DOUBLE.optionalFieldOf("centeredHeartSpeed", DEFAULT_CENTERED_HEART_SPEED).forGetter(Config::getCenteredHeartSpeed),
-                    Codec.BOOL.optionalFieldOf("playDetermination", DEFAULT_DETERMINATION).forGetter(Config::getDetermination)
-            ).apply(instance, Config::new));
-
-    public Config(ShardRenderStyle style, boolean musicTurnoff, boolean centeredHeart, boolean centeredHeartAnimation, double centeredHeartSpeed, boolean determination) {
-        this.style = style;
-        this.musicTurnoff = musicTurnoff;
-        this.centeredHeart = centeredHeart;
-        this.centeredHeartAnimation = centeredHeartAnimation;
-        this.centeredHeartSpeed = centeredHeartSpeed;
-        this.determination = determination;
+    private Config() {
     }
 
-    public Config() {
-        this.style = DEFAULT_STYLE;
-        this.musicTurnoff = DEFAULT_MUSIC_TURNOFF;
+    public static Config getDefault() {
+        return new Config();
+    }
+
+    private static Config load() {
+        Config config = null;
+        try {
+            if (Files.exists(CONFIG_PATH)) {
+                try (FileReader reader = new FileReader(CONFIG_PATH.toFile())) {
+                    config = GSON.fromJson(reader, Config.class);
+                }
+            }
+        } catch (IOException | JsonSyntaxException e) {
+            UndertaleDeathScreenCommon.logger.error("Failed to load configuration file. Using default values.", e);
+        }
+
+        if (config == null) {
+            config = getDefault();
+        }
+
+        config.centeredHeartSpeed = Math.max(0.1, Math.min(1.0, config.centeredHeartSpeed));
+        config.save();
+        return config;
+    }
+
+    public void save() {
+        try {
+            Files.createDirectories(CONFIG_PATH.getParent());
+            Files.writeString(CONFIG_PATH, GSON.toJson(this));
+        } catch (IOException e) {
+            UndertaleDeathScreenCommon.logger.error("Failed to save configuration file:", e);
+        }
+    }
+
+    public boolean getDynamicHeart() {
+        return dynamicHeart;
+    }
+
+    public void setDynamicHeart(boolean value) {
+        dynamicHeart = value;
     }
 
     public boolean getDetermination() {
         return determination;
     }
+
     public void setDetermination(boolean value) {
         determination = value;
     }
@@ -69,6 +81,7 @@ public class Config {
     public double getCenteredHeartSpeed() {
         return centeredHeartSpeed;
     }
+
     public void setCenteredHeartSpeed(double value) {
         centeredHeartSpeed = value;
     }
@@ -76,6 +89,7 @@ public class Config {
     public boolean getCenteredHeartAnimation() {
         return centeredHeartAnimation;
     }
+
     public void setCenteredHeartAnimation(boolean value) {
         centeredHeartAnimation = value;
     }
@@ -83,6 +97,7 @@ public class Config {
     public boolean getCenteredHeart() {
         return centeredHeart;
     }
+
     public void setCenteredHeart(boolean value) {
         centeredHeart = value;
     }
@@ -90,6 +105,7 @@ public class Config {
     public ShardRenderStyle getStyle() {
         return style;
     }
+
     public void setStyle(ShardRenderStyle style) {
         this.style = style;
     }
@@ -102,29 +118,10 @@ public class Config {
         this.musicTurnoff = musicTurnoff;
     }
 
-    public void save(File location) {
-        DataResult<JsonElement> result = CODEC.encodeStart(JsonOps.INSTANCE, this);
-        if (result.error().isPresent() /*? if >=1.20.6 {*/ || result.isError() /*?}*/ || result.result().isEmpty()) {
-            UndertaleDeathScreenCommon.logger.warn("Failed to encode the configuration. Configuration not saved.");
-            result.error().ifPresent(error -> UndertaleDeathScreenCommon.logger.error("Error details: {}", error.message()));
-        } else {
-            try {
-                Files.writeString(
-                        location.toPath(),
-                        new GsonBuilder().setPrettyPrinting().create().toJson(result.result().get())
-                );
-            } catch (IOException exception) {
-                UndertaleDeathScreenCommon.logger.error("IOException occurred while saving configuration file.", exception);
-                UndertaleDeathScreenCommon.logger.warn("Failed to save configuration. Configuration not saved.");
-            }
-        }
-    }
-
     public enum ShardRenderStyle implements StringRepresentable {
         ANIMATED("animated"),
         ROTATION("rotated");
 
-        public static final Codec<ShardRenderStyle> CODEC = StringRepresentable.fromEnum(ShardRenderStyle::values);
         private final String name;
 
         ShardRenderStyle(final String name) {

@@ -16,9 +16,9 @@ logoBlur = false
 config = "${id}-common.mixins.json"
 
 [[dependencies.${id}]]
-modId="cloth_config"
-type="optional"
-mandatory=false
-versionRange="[${cloth_config_version},)"
-ordering="NONE"
-side="CLIENT"
+modId = "cloth_config"
+type = "optional"
+mandatory = false
+versionRange = "[${cloth_config_version},)"
+ordering = "NONE"
+side = "CLIENT"

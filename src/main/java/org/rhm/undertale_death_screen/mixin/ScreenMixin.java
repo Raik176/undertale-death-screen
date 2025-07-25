@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ScreenMixin {
     @Inject(method = "removed", at = @At("HEAD"))
     private void removed(CallbackInfo ci) {
-        if ((Object)this instanceof DeathScreenAccess access) {
+        if ((Object) this instanceof DeathScreenAccess access) {
             access.undertale_death_animation$stopBackgroundMusic();
         }
     }

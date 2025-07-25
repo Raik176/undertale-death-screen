@@ -3,22 +3,18 @@
   "undertale_death_screen.config.shard_render_style.animated": "Animated",
   "undertale_death_screen.config.shard_render_style.rotated": "Rotated",
   "undertale_death_screen.config.shard_render_style.ttp": "Configures the style of the shattered heart pieces.\n  Animated: The piece will animate but not rotate.\n  Rotated: The piece will rotate but will not be animated.",
-
   "undertale_death_screen.config.music_turnoff": "Stop all music?",
   "undertale_death_screen.config.music_turnoff.ttp": "Whether to stop all sound & music whenever you die",
-
   "undertale_death_screen.config.centered_heart": "Center heart?",
   "undertale_death_screen.config.centered_heart.ttp": "Whether to center the heart in the middle.",
-
   "undertale_death_screen.config.centered_heart_anim": "Center heart animation?",
   "undertale_death_screen.config.centered_heart_anim.ttp": "Whether to smoothly animate the heart to the center of the\nscreen before shattering.",
-
   "undertale_death_screen.config.centered_heart_speed": "Heart center speed",
   "undertale_death_screen.config.centered_heart_speed.ttp": "Speed of the heart center animation.",
-
   "undertale_death_screen.config.determination": "Play music?",
   "undertale_death_screen.config.determination.ttp": "Whether to play music (by default Determination from Undertale) on the death screen.",
-
   "subtitles.undertale_death_screen.heart_shatter": "Heart shatters",
-  "subtitles.undertale_death_screen.music.determination": "Undertale - Determination"
+  "subtitles.undertale_death_screen.music.determination": "Undertale - Determination",
+  "undertale_death_screen.config.dynamicHeart": "Use dynamic hearts?",
+  "undertale_death_screen.config.dynamicHeart.ttp": "Whether to dynamically change the heart texture and color based on the player status. Supported is:\n - Being poisoned\n - Withering away\n - Freezing"
 }

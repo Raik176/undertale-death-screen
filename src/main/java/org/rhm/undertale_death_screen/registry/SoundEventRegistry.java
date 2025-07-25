@@ -11,5 +11,6 @@ public class SoundEventRegistry {
     public static final Supplier<SoundEvent> DETERMINATION = UndertaleDeathScreenCommon.getImplementation()
             .registerSoundEvent("determination");
 
-    public static void init() { }
+    public static void init() {
+    }
 }

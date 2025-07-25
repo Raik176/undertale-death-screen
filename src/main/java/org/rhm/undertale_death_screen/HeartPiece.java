@@ -1,11 +1,12 @@
 package org.rhm.undertale_death_screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 
 //? if >=1.21.2
-/*import net.minecraft.client.renderer.RenderType;*/
+import net.minecraft.client.renderer.RenderType;
 
 public class HeartPiece {
     public static final ResourceLocation PIECES_TEXTURE_LOCATION = UndertaleDeathScreenCommon.id("undertale_death/heart_pieces");
@@ -18,17 +19,16 @@ public class HeartPiece {
     public static final int TOTAL_FRAMES = PIECE_TEXTURE_WIDTH / PIECE_WIDTH;
 
     private final boolean animated;
-
+    private final int textureX, textureY;
+    private final double angularVelocity;
+    private final float r,g,b;
     public double x, y;
     private double vx, vy;
-    private final int textureX, textureY;
     private double rotation;
-    private final double angularVelocity;
-
     private int currentFrame = 0;
     private int frameTickCounter = 0;
 
-    public HeartPiece(double x, double y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity) {
+    public HeartPiece(double x, double y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity, int color) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -38,7 +38,11 @@ public class HeartPiece {
         this.rotation = rotation;
         this.angularVelocity = angularVelocity;
 
-        this.animated = UndertaleDeathScreenCommon.config.getStyle() == Config.ShardRenderStyle.ANIMATED;
+        this.animated = Config.INSTANCE.getStyle() == Config.ShardRenderStyle.ANIMATED;
+
+        r = ((color >> 16) & 0xFF) / 255.0f;
+        g = ((color >> 8) & 0xFF) / 255.0f;
+        b = (color & 0xFF) / 255.0f;
     }
 
     public void renderTick() {
@@ -67,26 +71,30 @@ public class HeartPiece {
     public void render(GuiGraphics guiGraphics) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x, y, 0);
+        //? if <1.20.6
+        /*guiGraphics.setColor(r, g, b, 1);*/
+
         if (!animated) {
             guiGraphics.pose().mulPose(new Quaternionf().rotateZ((float) Math.toRadians(rotation)));
             guiGraphics.pose().translate(-PIECE_WIDTH / 2.0, -PIECE_TEXTURE_HEIGHT / 2.0, 0);
         }
 
         //? if >= 1.20.6 {
-            guiGraphics.blitSprite(
-                    //? if >=1.21.2
-                    /*RenderType::guiTextured,*/
-                    PIECES_TEXTURE_LOCATION,
-                    PIECE_TEXTURE_WIDTH,
-                    PIECE_TEXTURE_HEIGHT,
-                    animated ? currentFrame * PIECE_WIDTH : textureX,
-                    textureY,
-                    0,
-                    0,
-                    PIECE_WIDTH,
-                    PIECE_TEXTURE_HEIGHT
-            );
-            //?} else {
+        guiGraphics.blit(
+                //? if >= 1.21.2
+                RenderType::guiTextured,
+                PIECES_TEXTURE_LOCATION.withPrefix("textures/gui/sprites/").withSuffix(".png"),
+                0,
+                0,
+                animated ? currentFrame * PIECE_WIDTH : textureX,
+                textureY,
+                PIECE_WIDTH,
+                PIECE_TEXTURE_HEIGHT,
+                PIECE_TEXTURE_WIDTH,
+                PIECE_TEXTURE_HEIGHT,
+                (0xFF << 24) | ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255)
+        );
+        //?} else {
         /*guiGraphics.blit(
                 PIECES_TEXTURE_LOCATION.withPrefix("textures/gui/sprites/").withSuffix(".png"),
                 0,

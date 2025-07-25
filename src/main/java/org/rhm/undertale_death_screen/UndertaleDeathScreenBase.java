@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 public interface UndertaleDeathScreenBase {
     Supplier<SoundEvent> registerSoundEvent(String path);
+
     boolean isModLoaded(String id);
+
     Path getConfigDir();
 }
