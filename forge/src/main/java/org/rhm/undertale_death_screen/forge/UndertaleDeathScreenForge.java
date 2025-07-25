@@ -1,11 +1,11 @@
 package org.rhm.undertale_death_screen.forge;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,24 +21,32 @@ public class UndertaleDeathScreenForge {
     public UndertaleDeathScreenForge(FMLJavaModLoadingContext context) {
         UndertaleDeathScreenCommon.init(new Impl());
 
-        IEventBus eventBus = context.getModEventBus();
-        Impl.register(eventBus);
+        //? if >=1.21.6 {
+        /*Impl.register(context.getModBusGroup());
+        *///?} else
+        Impl.register(context.getModEventBus());
 
-        eventBus.addListener(this::clientSetup);
-    }
-
-    private void clientSetup(FMLClientSetupEvent event) {
-        //idk what the older replacement for this is
-        //? if >=1.20.6
-        MinecraftForge.registerConfigScreen(UndertaleDeathScreenCommon::getConfigScreen);
+        //? if >=1.20.6 {
+        context.registerExtensionPoint
+        //?} else
+        /*ModLoadingContext.get().registerExtensionPoint*/
+                (ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) ->
+                        UndertaleDeathScreenCommon.getConfigScreen(parent)));
     }
 
     public static class Impl implements UndertaleDeathScreenBase {
         private static final DeferredRegister<SoundEvent> SOUND_EVENT_REGISTRY = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, UndertaleDeathScreenCommon.MOD_ID);
 
-        public static void register(IEventBus eventBus) {
+        //? if >=1.21.6 {
+        /*public static void register(net.minecraftforge.eventbus.api.bus.BusGroup eventBus) {
             SOUND_EVENT_REGISTRY.register(eventBus);
         }
+        *///?} else {
+        public static void register(net.minecraftforge.eventbus.api.IEventBus eventBus) {
+            SOUND_EVENT_REGISTRY.register(eventBus);
+        }
+        //?}
 
         @Override
         public Supplier<SoundEvent> registerSoundEvent(String path) {

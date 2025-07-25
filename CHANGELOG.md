@@ -1,5 +1,5 @@
-Feat: 1.20.x support
+1.21.6 - 1.21.8 support
 
-Fix: crashes on some versions due to arch-loom using the wrong refmap name
+Support player status specific heart graphics
 
-Refactor: Moved entire code to be inside a mixin instead of a wrapper screen
+Fix config screens not working on neoforge

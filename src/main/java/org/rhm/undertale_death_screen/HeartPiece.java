@@ -1,12 +1,8 @@
 package org.rhm.undertale_death_screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
-
-//? if >=1.21.2
-import net.minecraft.client.renderer.RenderType;
+import org.joml.Matrix3x2f;
 
 public class HeartPiece {
     public static final ResourceLocation PIECES_TEXTURE_LOCATION = UndertaleDeathScreenCommon.id("undertale_death/heart_pieces");
@@ -22,13 +18,13 @@ public class HeartPiece {
     private final int textureX, textureY;
     private final double angularVelocity;
     private final float r,g,b;
-    public double x, y;
+    public float x, y;
     private double vx, vy;
     private double rotation;
     private int currentFrame = 0;
     private int frameTickCounter = 0;
 
-    public HeartPiece(double x, double y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity, int color) {
+    public HeartPiece(float x, float y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity, int color) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -46,8 +42,8 @@ public class HeartPiece {
     }
 
     public void renderTick() {
-        x += vx;
-        y += vy;
+        x += (float) vx;
+        y += (float) vy;
         vy += 0.1;
         vx *= 0.98;
         vy *= 0.98;
@@ -69,20 +65,36 @@ public class HeartPiece {
     }
 
     public void render(GuiGraphics guiGraphics) {
+        //? if >=1.21.6 {
+        /*guiGraphics.pose().pushMatrix();
+        *///?} else
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(x, y, 0);
+        guiGraphics.pose().translate(
+                x, y
+                //? if <1.21.6
+                ,0
+        );
         //? if <1.20.6
         /*guiGraphics.setColor(r, g, b, 1);*/
 
         if (!animated) {
-            guiGraphics.pose().mulPose(new Quaternionf().rotateZ((float) Math.toRadians(rotation)));
-            guiGraphics.pose().translate(-PIECE_WIDTH / 2.0, -PIECE_TEXTURE_HEIGHT / 2.0, 0);
+            //? if >=1.21.6 {
+            /*guiGraphics.pose().mul(new Matrix3x2f().rotation((float) Math.toRadians(rotation)));
+            *///?} else
+            guiGraphics.pose().mulPose(new org.joml.Quaternionf().rotateZ((float) Math.toRadians(rotation)));
+            guiGraphics.pose().translate(
+                    -PIECE_WIDTH / 2f, -PIECE_TEXTURE_HEIGHT / 2f
+                    //? if <1.21.6
+                    ,0
+            );
         }
 
         //? if >= 1.20.6 {
         guiGraphics.blit(
-                //? if >= 1.21.2
-                RenderType::guiTextured,
+                //? if >= 1.21.6 {
+                /*net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                *///?} else if >= 1.21.2
+                /*net.minecraft.client.renderer.RenderType::guiTextured,*/
                 PIECES_TEXTURE_LOCATION.withPrefix("textures/gui/sprites/").withSuffix(".png"),
                 0,
                 0,
@@ -108,6 +120,9 @@ public class HeartPiece {
         );
         *///?}
 
+        //? if >=1.21.6 {
+        /*guiGraphics.pose().popMatrix();
+        *///?} else
         guiGraphics.pose().popPose();
     }
 }

@@ -28,9 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-//? if >=1.21.2
-import net.minecraft.client.renderer.RenderType;
-
 /*
 dear readers,
 I know this mixin is absolutely horrendous, and I hate it as well. I, however, am too lazy to rewrite it
@@ -192,8 +189,8 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
                 double vy = Math.sin(angle) * speed;
 
                 undertale_death_animation$pieces.add(new HeartPiece(
-                        x + HEART_WIDTH / 2.0,
-                        y + HEART_HEIGHT / 2.0,
+                        x + HEART_WIDTH / 2f,
+                        y + HEART_HEIGHT / 2f,
                         vx,
                         vy,
                         undertale_death_animation$randomSource.nextInt(HeartPiece.PIECE_TEXTURE_WIDTH / HeartPiece.PIECE_WIDTH),
@@ -227,8 +224,10 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
     private void undertale_death_animation$renderHeart(GuiGraphics guiGraphics, int stage, int x, int y) {
         //? if >=1.20.6 {
         guiGraphics.blitSprite(
-                //? if >=1.21.2
-                RenderType::guiTextured,
+                //? if >= 1.21.6 {
+                /*net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                *///?} else if >= 1.21.2
+                /*net.minecraft.client.renderer.RenderType::guiTextured,*/
                 this.hardcore ?
                         HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
                 HEART_TEXTURE_WIDTH,
