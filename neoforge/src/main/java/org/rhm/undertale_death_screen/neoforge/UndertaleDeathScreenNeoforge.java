@@ -29,22 +29,24 @@ public class UndertaleDeathScreenNeoforge {
         UndertaleDeathScreenCommon.init(new Impl());
         Impl.register(eventBus);
 
-        //? if >=1.20.6 {
-        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> new IConfigScreenFactory() {
-            // neoforge changed the signature some time, no idea when but this should support both
+        if (UndertaleDeathScreenCommon.isConfigSupported()) {
+            //? if >=1.20.6 {
+            ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> new IConfigScreenFactory() {
+                // neoforge changed the signature some time, no idea when but this should support both
 
-            public @NotNull Screen createScreen(@NotNull ModContainer container, @NotNull Screen parent) {
-                return getConfigScreen(parent);
-            }
-            public @NotNull Screen createScreen(@NotNull Minecraft client, @NotNull Screen parent) {
-                return getConfigScreen(parent);
-            }
-        });
-        //?} else {
-        /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(
-            (client, parent) -> getConfigScreen(parent)
-        ));
-        *///?}
+                public @NotNull Screen createScreen(@NotNull ModContainer container, @NotNull Screen parent) {
+                    return getConfigScreen(parent);
+                }
+                public @NotNull Screen createScreen(@NotNull Minecraft client, @NotNull Screen parent) {
+                    return getConfigScreen(parent);
+                }
+            });
+            //?} else {
+            /*ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(
+                (client, parent) -> getConfigScreen(parent)
+            ));
+            *///?}
+        }
     }
 
     private Screen getConfigScreen(Screen parent) {

@@ -18,6 +18,12 @@ import java.util.function.Supplier;
 
 @Mod(UndertaleDeathScreenCommon.MOD_ID)
 public class UndertaleDeathScreenForge {
+
+    @SuppressWarnings("removal")
+    public UndertaleDeathScreenForge() {
+        this(FMLJavaModLoadingContext.get());
+    }
+
     public UndertaleDeathScreenForge(FMLJavaModLoadingContext context) {
         UndertaleDeathScreenCommon.init(new Impl());
 
@@ -26,13 +32,15 @@ public class UndertaleDeathScreenForge {
         *///?} else
         Impl.register(context.getModEventBus());
 
-        //? if >=1.20.6 {
-        context.registerExtensionPoint
-        //?} else
-        /*ModLoadingContext.get().registerExtensionPoint*/
-                (ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) ->
-                        UndertaleDeathScreenCommon.getConfigScreen(parent)));
+        if (UndertaleDeathScreenCommon.isConfigSupported()) {
+            //? if >=1.20.6 {
+            context.registerExtensionPoint
+            //?} else
+            /*ModLoadingContext.get().registerExtensionPoint*/
+                            (ConfigScreenHandler.ConfigScreenFactory.class,
+                                    () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) ->
+                                            UndertaleDeathScreenCommon.getConfigScreen(parent)));
+        }
     }
 
     public static class Impl implements UndertaleDeathScreenBase {

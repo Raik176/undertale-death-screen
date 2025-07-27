@@ -9,6 +9,7 @@ import org.rhm.undertale_death_screen.registry.SoundEventRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 public class UndertaleDeathScreenCommon {
@@ -36,14 +37,21 @@ public class UndertaleDeathScreenCommon {
         return Component.translatable(MOD_ID + "." + path);
     }
 
+    private static Optional<ClothConfigCompatBase> getClothConfigCompat() {
+        if (!impl.isModLoaded("cloth_config") && !impl.isModLoaded("cloth-config")) {
+            return Optional.empty();
+        }
+
+        return ServiceLoader.load(ClothConfigCompatBase.class).findFirst();
+    }
+
+    public static boolean isConfigSupported() {
+        return getClothConfigCompat().isPresent();
+    }
+
     public static Screen getConfigScreen(Screen parent) {
-        if (impl.isModLoaded("cloth_config") || impl.isModLoaded("cloth-config")) {
-            ServiceLoader<ClothConfigCompatBase> loader = ServiceLoader.load(ClothConfigCompatBase.class);
-            if (loader.findFirst().isEmpty()) {
-                //huh??
-                return null;
-            }
-            return loader.findFirst().get().getConfigScreen(parent);
-        } else return null;
+        return getClothConfigCompat()
+                .map(compat -> compat.getConfigScreen(parent))
+                .orElse(null);
     }
 }
