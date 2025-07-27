@@ -1,5 +1,5 @@
-1.21.6 - 1.21.8 support
+Support for Neoforge versions below 1.20.6
 
-Support player status specific heart graphics
+Fix rendering related bug on 1.21.1
 
-Fix config screens not working on neoforge
+Fix Neoforge crashes when trying to open the config screen
