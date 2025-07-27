@@ -74,8 +74,8 @@ public class HeartPiece {
                 //? if <1.21.6
                 ,0
         );
-        //? if <1.20.6
-        /*guiGraphics.setColor(r, g, b, 1);*/
+        //? if <=1.20.6
+        guiGraphics.setColor(r, g, b, 1);
 
         if (!animated) {
             //? if >=1.21.6 {
@@ -103,8 +103,9 @@ public class HeartPiece {
                 PIECE_WIDTH,
                 PIECE_TEXTURE_HEIGHT,
                 PIECE_TEXTURE_WIDTH,
-                PIECE_TEXTURE_HEIGHT,
-                (0xFF << 24) | ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255)
+                PIECE_TEXTURE_HEIGHT
+                //? if >1.20.6
+                /*,(0xFF << 24) | ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255)*/
         );
         //?} else {
         /*guiGraphics.blit(
