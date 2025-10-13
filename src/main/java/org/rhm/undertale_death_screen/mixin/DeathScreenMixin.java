@@ -35,10 +35,10 @@ I know this mixin is absolutely horrendous, and I hate it as well. I, however, a
 @Mixin(DeathScreen.class)
 public abstract class DeathScreenMixin extends Screen implements DeathScreenAccess {
     @Unique
-    private static final List<Function<Player, HeartStyle>> COLUMN_SELECTOR = List.of(
-            (player) -> player.hasEffect(MobEffects.POISON) ? new HeartStyle(1, 0x8b8712) : null,
-            (player) -> player.hasEffect(MobEffects.WITHER) ? new HeartStyle(2, 0x2b2b2b) : null,
-            (player) -> player.isFreezing() ? new HeartStyle(3, 0x80e5ef) : null
+    private static final List<Function<Player, Integer>> COLUMN_SELECTOR = List.of(
+            (player) -> player.hasEffect(MobEffects.POISON) ? 1 : null,
+            (player) -> player.hasEffect(MobEffects.WITHER) ? 2 : null,
+            (player) -> player.isFreezing() ? 3 : null
     );
 
     @Unique
@@ -76,7 +76,7 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
     @Unique
     private int undertale_death_animation$bgmProgress;
     @Unique
-    private HeartStyle undertale_death_animation$heartStyle;
+    private Integer undertale_death_animation$heartStyle;
     @Unique
     @Nullable
     private BGMSoundInstance undertale_death_animation$bgmSoundInstance;
@@ -109,10 +109,10 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
         if (Minecraft.getInstance().player != null) {
             this.undertale_death_animation$randomSource = Minecraft.getInstance().player.level().getRandom();
 
-            this.undertale_death_animation$heartStyle = new HeartStyle(0, 0xf71414);
+            this.undertale_death_animation$heartStyle = 0;
             if (Config.INSTANCE.getDynamicHeart()) {
-                for (Function<Player, HeartStyle> selector : COLUMN_SELECTOR) {
-                    HeartStyle style = selector.apply(Minecraft.getInstance().player);
+                for (Function<Player, Integer> selector : COLUMN_SELECTOR) {
+                    Integer style = selector.apply(Minecraft.getInstance().player);
                     if (style != null) {
                         this.undertale_death_animation$heartStyle = style;
                         break;
@@ -216,10 +216,9 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
                         vx,
                         vy,
                         undertale_death_animation$randomSource.nextInt(HeartPiece.PIECE_TEXTURE_WIDTH / HeartPiece.PIECE_WIDTH),
-                        0,
+                        undertale_death_animation$heartStyle * HeartPiece.PIECE_HEIGHT,
                         undertale_death_animation$randomSource.nextDouble() * 360,
-                        undertale_death_animation$randomSource.nextDouble() * 8 - 2,
-                        undertale_death_animation$heartStyle.color()
+                        undertale_death_animation$randomSource.nextDouble() * 8 - 2
                 ));
             }
         } else { // Render the pieces
@@ -255,7 +254,7 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
                 HEART_TEXTURE_WIDTH,
                 HEART_TEXTURE_HEIGHT,
                 HEART_WIDTH * stage,
-                HEART_HEIGHT * this.undertale_death_animation$heartStyle.column(),
+                HEART_HEIGHT * this.undertale_death_animation$heartStyle,
                 x,
                 y,
                 HEART_WIDTH,

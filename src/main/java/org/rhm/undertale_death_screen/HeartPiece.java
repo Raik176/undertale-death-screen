@@ -8,23 +8,23 @@ public class HeartPiece {
     public static final ResourceLocation PIECES_TEXTURE_LOCATION = UndertaleDeathScreenCommon.id("undertale_death/heart_pieces");
 
     public static final int PIECE_TEXTURE_WIDTH = 40;
-    public static final int PIECE_TEXTURE_HEIGHT = 5;
+    public static final int PIECE_TEXTURE_HEIGHT = 20;
 
     public static final int PIECE_WIDTH = 5;
+    public static final int PIECE_HEIGHT = 5;
     public static final int FRAME_DURATION = 4;
     public static final int TOTAL_FRAMES = PIECE_TEXTURE_WIDTH / PIECE_WIDTH;
 
     private final boolean animated;
     private final int textureX, textureY;
     private final double angularVelocity;
-    private final float r,g,b;
     public float x, y;
     private double vx, vy;
     private double rotation;
     private int currentFrame = 0;
     private int frameTickCounter = 0;
 
-    public HeartPiece(float x, float y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity, int color) {
+    public HeartPiece(float x, float y, double vx, double vy, int textureX, int textureY, double rotation, double angularVelocity) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -35,10 +35,6 @@ public class HeartPiece {
         this.angularVelocity = angularVelocity;
 
         this.animated = Config.INSTANCE.getStyle() == Config.ShardRenderStyle.ANIMATED;
-
-        r = ((color >> 16) & 0xFF) / 255.0f;
-        g = ((color >> 8) & 0xFF) / 255.0f;
-        b = (color & 0xFF) / 255.0f;
     }
 
     public void renderTick() {
@@ -74,8 +70,6 @@ public class HeartPiece {
                 //? if <1.21.6
                 ,0
         );
-        //? if <=1.20.6
-        guiGraphics.setColor(r, g, b, 1);
 
         if (!animated) {
             //? if >=1.21.6 {
@@ -83,7 +77,7 @@ public class HeartPiece {
             *///?} else
             guiGraphics.pose().mulPose(new org.joml.Quaternionf().rotateZ((float) Math.toRadians(rotation)));
             guiGraphics.pose().translate(
-                    -PIECE_WIDTH / 2f, -PIECE_TEXTURE_HEIGHT / 2f
+                    -PIECE_WIDTH / 2f, -PIECE_HEIGHT / 2f
                     //? if <1.21.6
                     ,0
             );
@@ -101,11 +95,9 @@ public class HeartPiece {
                 animated ? currentFrame * PIECE_WIDTH : textureX,
                 textureY,
                 PIECE_WIDTH,
-                PIECE_TEXTURE_HEIGHT,
+                PIECE_HEIGHT,
                 PIECE_TEXTURE_WIDTH,
                 PIECE_TEXTURE_HEIGHT
-                //? if >1.20.6
-                /*,(0xFF << 24) | ((int)(r * 255) << 16) | ((int)(g * 255) << 8) | (int)(b * 255)*/
         );
         //?} else {
         /*guiGraphics.blit(
@@ -115,7 +107,7 @@ public class HeartPiece {
                 animated ? currentFrame * PIECE_WIDTH : textureX,
                 textureY,
                 PIECE_WIDTH,
-                PIECE_TEXTURE_HEIGHT,
+                PIECE_HEIGHT,
                 PIECE_TEXTURE_WIDTH,
                 PIECE_TEXTURE_HEIGHT
         );
