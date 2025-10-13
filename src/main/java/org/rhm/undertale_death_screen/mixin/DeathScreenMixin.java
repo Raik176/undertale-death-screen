@@ -267,7 +267,7 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
 				x,
 				y,
 				HEART_WIDTH * stage,
-				HEART_HEIGHT * this.undertale_death_animation$heartStyle.column(),
+				HEART_HEIGHT * this.undertale_death_animation$heartStyle,
 				HEART_WIDTH,
 				HEART_HEIGHT,
 				HEART_TEXTURE_WIDTH,
