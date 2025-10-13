@@ -93,8 +93,8 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
     @Shadow
     protected abstract void setButtonsActive(boolean bl);
 
-    @Inject(method = "init", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void setUpVariables(CallbackInfo ci) {
         if (Config.INSTANCE.getShouldStopSound()) {
             Minecraft.getInstance().getMusicManager().stopPlaying();
             Minecraft.getInstance().getSoundManager().stop();
@@ -120,6 +120,10 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
                 }
             }
         }
+    }
+
+    @Inject(method = "init", at = @At("TAIL"))
+    private void init(CallbackInfo ci) {
         setButtonsActive(true);
     }
 
@@ -244,7 +248,7 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
         guiGraphics.blitSprite(
                 //? if >= 1.21.6 {
                 /*net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
-                *///?} else if >= 1.21.2
+                 *///?} else if >= 1.21.2
                 /*net.minecraft.client.renderer.RenderType::guiTextured,*/
                 this.hardcore ?
                         HEART_TEXTURE_LOCATION_HC : HEART_TEXTURE_LOCATION,
