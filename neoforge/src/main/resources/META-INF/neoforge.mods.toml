@@ -19,6 +19,6 @@ config = "${id}-common.mixins.json"
 modId = "cloth_config"
 type = "optional"
 mandatory = false
-versionRange = "(,)"
+versionRange = "[0,)"
 ordering = "NONE"
 side = "CLIENT"
