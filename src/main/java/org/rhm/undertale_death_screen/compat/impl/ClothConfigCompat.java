@@ -84,6 +84,16 @@ public class ClothConfigCompat implements ClothConfigCompatBase {
                 .setTooltip(UndertaleDeathScreenCommon.translatable("config.dynamicHeart.ttp"))
                 .setSaveConsumer(Config.INSTANCE::setDynamicHeart)
                 .build());
+        general.addEntry(entryBuilder.startDoubleField(
+                                UndertaleDeathScreenCommon.translatable("config.background_fade_speed"),
+                                Config.INSTANCE.getBackgroundFadeSpeed()
+                        ).setDefaultValue(Config.getDefault().getBackgroundFadeSpeed())
+                        .setMin(0)
+                        .setMax(1)
+                        .setTooltip(UndertaleDeathScreenCommon.translatable("config.background_fade_speed.ttp"))
+                        .setSaveConsumer(Config.INSTANCE::setBackgroundFadeSpeed)
+                        .build()
+        );
 
         return builder.build();
     }

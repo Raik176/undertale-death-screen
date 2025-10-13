@@ -158,7 +158,25 @@ public abstract class DeathScreenMixin extends Screen implements DeathScreenAcce
             y = guiGraphics.guiHeight() - 39 - 3;
         }
 
-        guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), 0xFF000000);
+        double fadeSpeed = Config.INSTANCE.getBackgroundFadeSpeed();
+        int bgColor = 0x00000000;
+
+        if (fadeSpeed > 0) {
+            if (fadeSpeed >= 1) {
+                bgColor = 0xFF000000;
+            } else {
+                int alpha = (int) (
+                        Mth.smoothstep(
+                                Math.min((undertale_death_animation$age + delta) * Math.pow(fadeSpeed, 0.5) / 5, 1)
+                        ) * 255
+                );
+                bgColor = (alpha << 24);
+            }
+        }
+
+        if ((bgColor >>> 24) > 0) {
+            guiGraphics.fill(0, 0, guiGraphics.guiWidth(), guiGraphics.guiHeight(), bgColor);
+        }
 
         if (!undertale_death_animation$shouldStart) {
             undertale_death_animation$progress = Math.min(undertale_death_animation$progress + delta * Config.INSTANCE.getCenteredHeartSpeed(), 1);

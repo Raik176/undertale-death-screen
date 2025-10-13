@@ -23,6 +23,7 @@ public class Config {
     private boolean centeredHeart = true;
     private boolean centeredHeartAnimation = false;
     private double centeredHeartSpeed = 0.15;
+    private double backgroundFadeSpeed = 1;
     private boolean dynamicHeart = true;
 
     private Config() {
@@ -113,10 +114,17 @@ public class Config {
     public boolean getShouldStopSound() {
         return musicTurnoff;
     }
-
     public void setShouldStopSound(boolean musicTurnoff) {
         this.musicTurnoff = musicTurnoff;
     }
+
+    public double getBackgroundFadeSpeed() {
+        return backgroundFadeSpeed;
+    }
+    public void setBackgroundFadeSpeed(double backgroundFadeSpeed) {
+        this.backgroundFadeSpeed = backgroundFadeSpeed;
+    }
+
 
     public enum ShardRenderStyle implements StringRepresentable {
         ANIMATED("animated"),
