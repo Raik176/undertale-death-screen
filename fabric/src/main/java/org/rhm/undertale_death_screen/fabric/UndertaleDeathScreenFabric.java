@@ -1,5 +1,6 @@
 package org.rhm.undertale_death_screen.fabric;
 
+import dev.kikugie.fletching_table.annotation.fabric.Entrypoint;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -12,6 +13,7 @@ import org.rhm.undertale_death_screen.UndertaleDeathScreenCommon;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
+@Entrypoint
 public class UndertaleDeathScreenFabric implements ModInitializer {
     @Override
     public void onInitialize() {

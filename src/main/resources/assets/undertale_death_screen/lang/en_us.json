@@ -16,5 +16,7 @@
   "subtitles.undertale_death_screen.heart_shatter": "Heart shatters",
   "subtitles.undertale_death_screen.music.determination": "Undertale - Determination",
   "undertale_death_screen.config.dynamicHeart": "Use dynamic hearts?",
-  "undertale_death_screen.config.dynamicHeart.ttp": "Whether to dynamically change the heart texture and color based on the player status. Supported is:\n - Being poisoned\n - Withering away\n - Freezing"
+  "undertale_death_screen.config.dynamicHeart.ttp": "Whether to dynamically change the heart texture and color based on the player status. Supported is:\n - Being poisoned\n - Withering away\n - Freezing",
+  "undertale_death_screen.config.background_fade_speed": "Background Fade Speed",
+  "undertale_death_screen.config.background_fade_speed.ttp": "The speed at which to fill the screen with black.\nIf set to 0, it is disabled.\nIf set to 1, it is instantaneous"
 }

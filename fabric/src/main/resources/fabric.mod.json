@@ -13,26 +13,18 @@
     "sources": "https://github.com/Raik176/undertale-death-screen"
   },
   "license": "${license}",
-  "icon": "assets/${id}/icon.png",
+  "icon": "assets/undertale_death_screen/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "main": [
-      "${group}.${id}.fabric.UndertaleDeathScreenFabric"
-    ],
-    "modmenu": [
-      "${group}.${id}.fabric.compat.ModMenuCompat"
-    ]
-  },
   "mixins": [
     "${id}-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${fabric_loader_version}",
-    "fabric-api": ">=${fabric_api_version}",
+    "fabricloader": "*",
+    "fabric-api": "*",
     "minecraft": "${minecraft}"
   },
   "suggests": {
-    "cloth-config": ">=${cloth_config_version}",
-    "modmenu": ">=${modmenu_version}"
+    "cloth-config": "*",
+    "modmenu": "*"
   }
 }
