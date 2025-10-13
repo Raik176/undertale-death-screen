@@ -25,6 +25,11 @@ repositories {
 dependencies {
     "neoForge"("net.neoforged:neoforge:${common.mod.dep("neoforge_loader")}")
 
+    "io.github.llamalad7:mixinextras-neoforge:${mod.dep("mixin_extras")}".let {
+        add("include", it)
+        add("implementation", it)
+    }
+
     modImplementation("me.shedaniel.cloth:cloth-config-neoforge:${common.mod.dep("cloth_config")}")
 }
 

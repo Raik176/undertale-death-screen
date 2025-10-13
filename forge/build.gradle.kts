@@ -25,6 +25,11 @@ repositories {
 dependencies {
     "forge"("net.minecraftforge:forge:$minecraft-${common.mod.dep("forge_loader")}")
 
+    "io.github.llamalad7:mixinextras-forge:${mod.dep("mixin_extras")}".let {
+        add("include", it)
+        add("implementation", it)
+    }
+
     // cloth config doesn't support forge 1.21.5 (yet?)
     if (stonecutter.eval(minecraft, "<1.21.5")) {
         modImplementation("me.shedaniel.cloth:cloth-config-forge:${common.mod.dep("cloth_config")}")

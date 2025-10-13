@@ -98,6 +98,15 @@ for (node in stonecutter.tree.nodes) {
             isCanBeConsumed = false
             isCanBeResolved = true
         }
+        val fancyName = when (node.branch.id) {
+            "fabric" -> "Fabric"
+            "forge" -> "Forge"
+            "neoforge" -> "NeoForge"
+            "" -> "Common"
+            else -> {
+                TODO("Invalid branch: ${node.branch.id}")
+            }
+        }
 
         node.project.dependencies {
             add("minecraft", "com.mojang:minecraft:$minecraft")
@@ -110,7 +119,7 @@ for (node in stonecutter.tree.nodes) {
         node.project.configurations {
             named("compileClasspath") { extendsFrom(commonBundle) }
             named("runtimeClasspath") { extendsFrom(commonBundle) }
-            maybeCreate("developmentFabric").extendsFrom(commonBundle)
+            maybeCreate("development$fancyName").extendsFrom(commonBundle)
         }
 
         node.project.dependencies {
@@ -121,7 +130,7 @@ for (node in stonecutter.tree.nodes) {
 
             if (loader != "common") {
                 commonBundle(project(common.path, "namedElements")) { isTransitive = false }
-                shadowBundle(project(common.path, "transformProductionFabric")) { isTransitive = false }
+                shadowBundle(project(common.path, "transformProduction$fancyName")) { isTransitive = false }
             }
         }
 
@@ -315,6 +324,7 @@ publishMods {
     displayName = mod.version
 
     github {
+        changelog = rootProject.publishMods.changelog
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
         repository = mod.prop("github")
         commitish = "main"
