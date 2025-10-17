@@ -11,6 +11,9 @@
     <a href="https://discord.gg/FpEReTJbSA">
         <img alt="discord-plural" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy-minimal/social/discord-plural_vector.svg">
     </a>
+    <a href="https://ko-fi.com/R6R3163YVT">
+        <img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy-minimal/donate/kofi-singular_vector.svg">
+    </a>
 </div>
 
 
@@ -19,14 +22,18 @@ Makes your last heart shatter when you die like in undertale.
 
 ![Example Death](https://i.imgur.com/p5Ql0OT.gif)
 
-# Want to support the Mod?
-Thank you so much for using this mod! While I don't accept donations, your support in other ways means the world and helps the mod grow.
+# Want to Support the Mod?
+Thank you so much for using this mod! Your support means the world and helps the mod grow.
 
-The simplest and best way you can help is by letting others know about it! When more people discover the mod, it builds a bigger community and fuels my motivation to keep improving it and adding new features. By sharing, you directly contribute to its future development.
+I now **accept donations**! If you'd like to contribute directly, you can support me on Ko-fi:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R3163YVT)
+
+Even if you don't donate, there are still many ways to help the mod thrive:
 
 ### How You Can Help Spread the Word:
-- **Showcase It**: Create a video review/showcase, or even a let's play featuring the mod.
-- **Recommend It**: Tell friends who might enjoy it, or share it in relevant online communities (but be considerate and avoid spamming).
+- **Showcase It**: Create a video review/showcase, or a let's play featuring the mod.  
+- **Recommend It**: Tell friends who might enjoy it, or share it in relevant online communities (just be considerate and avoid spamming).  
 - **Include It in a Modpack**: Adding it to your modpack is a great way to help others discover it.
 
-Every share makes a difference. Thank you for helping this mod thrive!
+Every bit of support makes a difference. Thank you for helping this mod grow!
